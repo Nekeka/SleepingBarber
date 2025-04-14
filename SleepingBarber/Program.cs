@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+
 namespace SleepingBarber
 
 {
@@ -13,7 +14,7 @@ namespace SleepingBarber
             for (int i = 1; i < bs.maxSeats; i++)
             {
                 Thread customer = new Thread(bs.CustomerWait);
-                customer.Name = "Customer " + i;
+                customer.Name = "C: " + i;
                 customer.Start();
                 Thread.Sleep(new Random().Next(1000, 5000));
             }
@@ -63,10 +64,14 @@ namespace SleepingBarber
 
                 customers.Release();
                 seat.ReleaseMutex();
+
                 barbers.WaitOne();
-
                 Console.WriteLine($"{Thread.CurrentThread.Name} стріжеться.");
-
+            }
+            else
+            {
+                Console.WriteLine($"немає місця для {Thread.CurrentThread.Name}. Він залишає барбершоп");
+                seat.ReleaseMutex();
             }
         }
     }
